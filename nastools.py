@@ -88,13 +88,13 @@ def retrieve_nas_files(seqids, outdir, copyflag, filetype):
                     if copyflag:
                         try:
                             shutil.copy(path, outdir)
-                            logging.info('Copied {0} to {1}'.format(filename, os.path.join(outdir, filename)))
+                            logging.info('Copied {} to {}'.format(filename, os.path.join(outdir, filename)))
                         except shutil.SameFileError:
                             logging.info('A link to {} already exists in {}. Skipping...'.format(filename, outdir))
                     else:
                         os.symlink(os.path.join(relpath, filename),
                                    os.path.join(outdir, filename))
-                        logging.info('Linked {0} to {1}'.format(filename, os.path.join(outdir, filename)))
+                        logging.info('Linked {} to {}'.format(filename, os.path.join(outdir, filename)))
                 except OSError as exception:
                     if exception.errno != errno.EEXIST:
                         raise
@@ -124,10 +124,10 @@ def nastools_cli():
                         help="File containing list of SEQ IDs to extract")
     parser.add_argument("--outdir", "-o", required=True, type=str,
                         help="Out directory to link files to")
-    parser.add_argument("--copy", "-c", required=False, action='store_true', default=False,
-                        help="Setting this flag will copy the files instead of creating symlinks")
     parser.add_argument("--type", "-t", action='store', required=True, type=str, choices=['fasta', 'fastq'],
                         help="Type of files to retrieve, i.e. fasta or fastq")
+    parser.add_argument("--copy", "-c", required=False, action='store_true', default=False,
+                        help="Setting this flag will copy the files instead of creating symlinks")
     parser.add_argument("--verbose", "-v", required=False, action='store_true', default=False,
                         help="Setting this flag will enable more verbose output")
     args = parser.parse_args()
