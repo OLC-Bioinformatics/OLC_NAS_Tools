@@ -9,6 +9,17 @@ from settings import RAW_SEQUENCE_ROOT_DIR, PROCESSED_SEQUENCE_DATA_ROOT_DIR, MI
     EXTERNAL_MISEQ_BACKUP, WGSSPADES, MERGE_WGSSPADES, EXTERNAL_WGSSPADES, EXTERNAL_WGSSPADES_NONFOOD
 
 
+def verify_folders():
+    folders = [
+        RAW_SEQUENCE_ROOT_DIR, PROCESSED_SEQUENCE_DATA_ROOT_DIR, MISEQ_BACKUP, MERGE_BACKUP,
+        EXTERNAL_MISEQ_BACKUP, WGSSPADES, MERGE_WGSSPADES, EXTERNAL_WGSSPADES, EXTERNAL_WGSSPADES_NONFOOD
+    ]
+    for folder in folders:
+        if not os.path.isdir(folder):
+            logging.info('Could not find {}. Ensure the NAS is properly mounted.'.format(folder))
+            quit()
+
+
 def retrieve_nas_files(seqids, outdir, copyflag, filetype):
     """
     :param seqids: list containing valid OLC Seq IDs
@@ -16,6 +27,9 @@ def retrieve_nas_files(seqids, outdir, copyflag, filetype):
     :param copyflag: boolean flag to determine with to copy files to create symlinks
     :param filetype: accepts string of either 'fastq' or 'fasta' to determine where to search for files
     """
+    # Verify all target search folders are mounted
+    verify_folders()
+
     logging.info('Retrieving requested files...')
 
     # Verbose logging

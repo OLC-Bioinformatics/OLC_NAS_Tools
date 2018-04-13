@@ -3,8 +3,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="OLC_NAS_Tools",
-    version="0.1",  # version must be incremented manually each time
+    name="olcnastools",
+    version="0.2",  # version must be incremented manually each time
     packages=find_packages(),
     author="Forest Dussault",
     author_email="forest.dussault@inspection.gc.ca",
