@@ -9,5 +9,5 @@ setup(
     author="Forest Dussault",
     author_email="forest.dussault@inspection.gc.ca",
     url="https://github.com/forestdussault/OLC_NAS_Tools",  # link to the repo
-    scripts=['nastools.py'],
+    scripts=['nastools.py', 'settings.py'],
 )
