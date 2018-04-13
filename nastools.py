@@ -7,8 +7,21 @@ import shutil
 import logging
 import argparse
 from collections import defaultdict
-from settings import RAW_SEQUENCE_ROOT_DIR, PROCESSED_SEQUENCE_DATA_ROOT_DIR, MISEQ_BACKUP, MERGE_BACKUP, \
-    EXTERNAL_MISEQ_BACKUP, WGSSPADES, MERGE_WGSSPADES, EXTERNAL_WGSSPADES, EXTERNAL_WGSSPADES_NONFOOD
+
+# Global setup of expected NAS folder structure
+# TODO: this will eventually become /mnt/nas/, and old storage will be renamed to /mnt/nas2/
+NAS_DIR = os.path.join('/mnt', 'nas2')
+PROCESSED_SEQUENCE_DATA_ROOT_DIR = os.path.join(NAS_DIR, 'processed_sequence_data')
+RAW_SEQUENCE_ROOT_DIR = os.path.join(NAS_DIR, 'raw_sequence_data')
+
+NAS2_DIR = os.path.join('/mnt', 'nas')
+WGSSPADES = os.path.join(NAS2_DIR, 'WGSspades')
+MERGE_WGSSPADES = os.path.join(NAS2_DIR, 'merge_WGSspades')
+EXTERNAL_WGSSPADES = os.path.join(NAS2_DIR, 'External_WGSspades')
+EXTERNAL_WGSSPADES_NONFOOD = os.path.join(NAS2_DIR, 'External_WGSspades', 'nonFood')
+MISEQ_BACKUP = os.path.join(NAS2_DIR, 'MiSeq_Backup')
+MERGE_BACKUP = os.path.join(NAS2_DIR, 'merge_Backup')
+EXTERNAL_MISEQ_BACKUP = os.path.join(NAS2_DIR, 'External_MiSeq_Backup')
 
 
 def verify_folders():
@@ -153,6 +166,7 @@ def nastools_cli():
     # Make output directory if it doesn't exist.
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
+        logging.info('Created new folder at {}'.format(outdir))
 
     # Run script
     retrieve_nas_files(seqids, outdir, copyflag, filetype)
