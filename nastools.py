@@ -44,13 +44,13 @@ def verify_folders():
             quit()
 
 
-def retrieve_nas_files(seqids, outdir, copyflag, filetype, verbose_flag=False):
+def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=False):
     """
     :param seqids: LIST containing strings of valid OLC Seq IDs
     :param outdir: STRING path to directory to dump requested files
-    :param copyflag: BOOL flag to determine if files should be copied or symlinked
     :param filetype: STRING of either 'fastq' or 'fasta' to determine where to search for files
-    :param verbose_flag: BOOL flag to determine logging level
+    :param copyflag: BOOL flag to determine if files should be copied or symlinked. Default False.
+    :param verbose_flag: BOOL flag to determine logging level. Default False.
     """
     # Logging
     setup_logging(verbose_flag)
