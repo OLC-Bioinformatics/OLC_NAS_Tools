@@ -5,7 +5,10 @@
 pip install olcnastools
 ```
 
-## Help
+## Usage
+This can either be used from the command line or imported directly into a script.
+
+#### Command Line:
 ```
 usage: nastools.py [-h] --file FILE --outdir OUTDIR --type {fasta,fastq}
                    [--copy] [--verbose]
@@ -23,3 +26,16 @@ optional arguments:
 
 ```
 
+#### Accessing module in Python
+```from nastools import retrieve_nas_files```
+
+```
+def retrieve_nas_files(seqids, outdir, copyflag, filetype, verbose_flag=False):
+    """
+    :param seqids: LIST containing strings of valid OLC Seq IDs
+    :param outdir: STRING path to directory to dump requested files
+    :param copyflag: BOOL flag to determine with to copy files to create symlinks
+    :param filetype: STRING of either 'fastq' or 'fasta' to determine where to search for files
+    :param verbose_flag: BOOL flag to determine logging level
+    """
+```
