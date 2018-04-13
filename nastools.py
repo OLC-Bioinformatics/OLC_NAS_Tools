@@ -144,6 +144,10 @@ def nastools_cli():
     # Parse SeqIDs file
     seqids = parse_seqid_file(seqids)
 
+    # Make output directory if it doesn't exist.
+    if not os.path.isdir(outdir):
+        os.makedirs(outdir)
+
     # Run script
     retrieve_nas_files(seqids, outdir, copyflag, filetype)
 
