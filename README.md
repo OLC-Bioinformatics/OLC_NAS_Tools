@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/olcnastools.svg)](https://badge.fury.io/py/olcnastools)
+
 # OLC NAS Tools
 
 ## Install
