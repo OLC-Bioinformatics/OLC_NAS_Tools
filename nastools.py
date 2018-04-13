@@ -24,6 +24,15 @@ MERGE_BACKUP = os.path.join(NAS2_DIR, 'merge_Backup')
 EXTERNAL_MISEQ_BACKUP = os.path.join(NAS2_DIR, 'External_MiSeq_Backup')
 
 
+def setup_logging(verbose_flag):
+    if not verbose_flag:
+        logging.basicConfig(format='\033[92m \033[1m %(asctime)s \033[0m %(message)s ',
+                            level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
+    else:
+        logging.basicConfig(format='\033[92m \033[1m %(asctime)s \033[0m %(message)s ',
+                            level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
+
+
 def verify_folders():
     folders = [
         RAW_SEQUENCE_ROOT_DIR, PROCESSED_SEQUENCE_DATA_ROOT_DIR, MISEQ_BACKUP, MERGE_BACKUP,
@@ -35,15 +44,23 @@ def verify_folders():
             quit()
 
 
-def retrieve_nas_files(seqids, outdir, copyflag, filetype):
+def retrieve_nas_files(seqids, outdir, copyflag, filetype, verbose_flag=False):
     """
     :param seqids: list containing valid OLC Seq IDs
     :param outdir: path to directory to dump requested files
     :param copyflag: boolean flag to determine with to copy files to create symlinks
     :param filetype: accepts string of either 'fastq' or 'fasta' to determine where to search for files
     """
+    # Logging
+    setup_logging(verbose_flag)
+
     # Verify all target search folders are mounted
     verify_folders()
+
+    # Make output directory if it doesn't exist.
+    if not os.path.isdir(outdir):
+        os.makedirs(outdir)
+        logging.info('Created new folder at {}'.format(outdir))
 
     logging.info('Retrieving requested files...')
 
@@ -94,9 +111,7 @@ def retrieve_nas_files(seqids, outdir, copyflag, filetype):
         if seqid in file_dict:
             values = file_dict[seqid]
             for path in values:
-                filepath = os.path.dirname(path)
                 filename = os.path.basename(path)
-                relpath = os.path.relpath(filepath, outdir)
                 try:
                     if copyflag:
                         try:
@@ -105,8 +120,7 @@ def retrieve_nas_files(seqids, outdir, copyflag, filetype):
                         except shutil.SameFileError:
                             logging.info('A link to {} already exists in {}. Skipping...'.format(filename, outdir))
                     else:
-                        os.symlink(os.path.join(relpath, filename),
-                                   os.path.join(outdir, filename))
+                        os.symlink(path, os.path.join(outdir, filename))
                         logging.info('Linked {} to {}'.format(filename, os.path.join(outdir, filename)))
                 except OSError as exception:
                     if exception.errno != errno.EEXIST:
@@ -150,26 +164,13 @@ def nastools_cli():
     outdir = args.outdir
     copyflag = args.copy
     filetype = args.type
-    verbose = args.verbose
-
-    # Logging setup
-    if not verbose:
-        logging.basicConfig(format='\033[92m \033[1m %(asctime)s \033[0m %(message)s ',
-                            level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
-    else:
-        logging.basicConfig(format='\033[92m \033[1m %(asctime)s \033[0m %(message)s ',
-                            level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
+    verbose_flag = args.verbose
 
     # Parse SeqIDs file
     seqids = parse_seqid_file(seqids)
 
-    # Make output directory if it doesn't exist.
-    if not os.path.isdir(outdir):
-        os.makedirs(outdir)
-        logging.info('Created new folder at {}'.format(outdir))
-
     # Run script
-    retrieve_nas_files(seqids, outdir, copyflag, filetype)
+    retrieve_nas_files(seqids, outdir, copyflag, filetype, verbose_flag)
 
     logging.info('{} complete'.format(os.path.basename(__file__)))
 
