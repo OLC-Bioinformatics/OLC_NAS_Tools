@@ -6,7 +6,7 @@ pip install olcnastools
 ```
 
 ## Usage
-This can either be used from the command line or imported directly into a script.
+This program can either be used from the command line or imported directly in Python
 
 #### Command Line:
 ```
