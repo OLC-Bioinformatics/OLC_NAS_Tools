@@ -46,8 +46,11 @@ def retrieve_nas_files(seqids, outdir, copyflag, filetype):
     file_dict = defaultdict(list)
     if filetype == 'fastq':
         logging.info('Searching all raw sequence data folders...')
+        # New NAS
         for path in glob.iglob(os.path.join(RAW_SEQUENCE_ROOT_DIR, '*/*/*.fastq.gz')):
             file_dict[os.path.split(path)[1].split('_')[0]].append(path)
+
+        # Old NAS
         for path in glob.iglob(os.path.join(MISEQ_BACKUP, '*/*.fastq.gz')):
             file_dict[os.path.split(path)[1].split('_')[0]].append(path)
         for path in glob.iglob(os.path.join(EXTERNAL_MISEQ_BACKUP, '*/*/*.fastq.gz')):
@@ -58,8 +61,11 @@ def retrieve_nas_files(seqids, outdir, copyflag, filetype):
             file_dict[os.path.split(path)[1].split('_')[0]].append(path)
     elif filetype == 'fasta':
         logging.info('Searching all processed sequence data folders...')
+        # New NAS
         for path in glob.iglob(os.path.join(PROCESSED_SEQUENCE_DATA_ROOT_DIR, '*/*/BestAssemblies/*.fasta')):
             file_dict[os.path.split(path)[1].split('.fasta')[0]].append(path)
+
+        # Old NAS
         for path in glob.iglob(os.path.join(WGSSPADES, '*/BestAssemblies/*.fasta')):
             file_dict[os.path.split(path)[1].split('.fasta')[0]].append(path)
         for path in glob.iglob(os.path.join(MERGE_WGSSPADES, '*/BestAssemblies/*.fasta')):
