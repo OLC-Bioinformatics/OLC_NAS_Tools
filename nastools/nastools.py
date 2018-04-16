@@ -171,7 +171,11 @@ def nastools_cli():
     seqids = parse_seqid_file(seqids)
 
     # Run script
-    retrieve_nas_files(seqids, outdir, copyflag, filetype, verbose_flag)
+    retrieve_nas_files(seqids=seqids,
+                       outdir=outdir,
+                       copyflag=copyflag,
+                       filetype=filetype,
+                       verbose_flag=verbose_flag)
 
     logging.info('{} complete'.format(os.path.basename(__file__)))
 
