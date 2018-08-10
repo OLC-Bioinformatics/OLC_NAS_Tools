@@ -77,9 +77,13 @@ def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=Fa
     file_dict = defaultdict(list)
     if filetype == 'fastq':
         logging.info('Searching all raw sequence data folders...')
-        # New NAS
+        # New NAS - this gets Illumina FASTQS
         for path in glob.iglob(os.path.join(RAW_SEQUENCE_ROOT_DIR, '*/*/*.fastq.gz')):
             file_dict[os.path.split(path)[1].split('_')[0]].append(path)
+        # The Illumina FASTQs assumes that the files have an underscore in them, which nanopore SEQIDs don't.
+        # This grabs our nanopore SEQIDs.
+        for path in glob.iglob(os.path.join(RAW_SEQUENCE_ROOT_DIR, 'nanopore/*/*.fastq.gz')):
+            file_dict[os.path.split(path)[1].split('.')[0]].append(path)
 
         # Old NAS
         for path in glob.iglob(os.path.join(MISEQ_BACKUP, '*/*.fastq.gz')):
