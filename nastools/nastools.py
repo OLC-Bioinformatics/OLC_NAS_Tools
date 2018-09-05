@@ -20,7 +20,7 @@ MERGE_WGSSPADES = os.path.join(NAS2_DIR, 'merge_WGSspades')
 EXTERNAL_WGSSPADES = os.path.join(NAS2_DIR, 'External_WGSspades')
 EXTERNAL_WGSSPADES_NONFOOD = os.path.join(NAS2_DIR, 'External_WGSspades', 'nonFood')
 MISEQ_BACKUP = os.path.join(NAS2_DIR, 'MiSeq_Backup')
-MERGE_BACKUP = os.path.join(NAS2_DIR, 'merge_Backup')
+MERGE_BACKUP = os.path.join(NAS_DIR, 'raw_sequence_data', 'merged_sequences')
 EXTERNAL_MISEQ_BACKUP = os.path.join(NAS2_DIR, 'External_MiSeq_Backup')
 
 

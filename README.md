@@ -28,7 +28,7 @@ optional arguments:
 ```
 
 #### Accessing module in Python
-```from nastools import retrieve_nas_files```
+```from nastools.nastools import retrieve_nas_files```
 
 ```
 def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=False):
