@@ -4,10 +4,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="olcnastools",
-    version="1.1.4",
+    version="1.1.5",
     packages=find_packages(),
-    author="Forest Dussault",
-    author_email="forest.dussault@inspection.gc.ca",
-    url="https://github.com/forestdussault/OLC_NAS_Tools",  # link to the repo
-    scripts=['nastools/nastools.py']
+    author="Adam Koziol, Forest Dussault",
+    author_email="adam.koziol@canada.ca",
+    url="https://github.com/OLC-Bioinformatics/OLC_NAS_Tools",  # link to the repo
+    scripts=['nastools/nastools.py'],
+    install_requires=['olctools']
 )
