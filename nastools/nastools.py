@@ -226,6 +226,24 @@ def parse_seqid_file(seqfile):
     return seqids
 
 
+def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=False):
+    """
+    :param seqids: LIST containing strings of valid OLC Seq IDs
+    :param outdir: STRING path to directory to dump requested files
+    :param filetype: STRING of either 'fastq' or 'fasta' to determine where to search for files
+    :param copyflag: BOOL flag to determine if files should be copied or symlinked. Default False.
+    :param verbose_flag: BOOL flag to determine logging level. Default False.
+    """
+    # Create the retrieve object
+    retrieve = Retrieve(seqids=seqids,
+                        outdir=outdir,
+                        copyflag=copyflag,
+                        filetype=filetype,
+                        verboseflag=verbose_flag)
+    # Run script
+    retrieve.main()
+
+
 def nastools_cli():
     # Parser setup
     parser = argparse.ArgumentParser(description='Locate and copy/link either FASTQ or FASTA files on '
