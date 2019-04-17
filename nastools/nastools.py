@@ -164,37 +164,19 @@ class Retrieve(object):
         self.copyflag = copyflag
         self.filetype = filetype
         # Global setup of expected NAS folder structure
-        # TODO: this will eventually become /mnt/nas/, and old storage will be renamed to /mnt/nas2/
         # Set all the paths for the folders to use
         self.nas_dir = os.path.join('/mnt', 'nas2')
         self.processed_sequence_data = os.path.join(self.nas_dir, 'processed_sequence_data')
         self.raw_sequence_data = os.path.join(self.nas_dir, 'raw_sequence_data')
         self.merge_backup = os.path.join(self.nas_dir, 'raw_sequence_data', 'merged_sequences')
-        # Old NAS
-        self.old_nas = os.path.join('/mnt', 'nas')
-        self.wgs_spades = os.path.join(self.old_nas, 'WGSspades')
-        self.merge_wgs_spades = os.path.join(self.old_nas, 'merge_WGSspades')
-        self.external_wgs_spades = os.path.join(self.old_nas, 'External_WGSspades')
-        self.external_wgs_spades_nonfood = os.path.join(self.old_nas, 'External_WGSspades', 'nonFood')
-        self.miseq_backup = os.path.join(self.old_nas, 'MiSeq_Backup')
-        self.external_miseq_backup = os.path.join(self.old_nas, 'External_MiSeq_Backup')
         # Dictionaries storing the path, the file type present in the folder, and the nested folder structure
         self.nas_folders = {
             self.raw_sequence_data: {'fastq': ['*/*']},
             self.merge_backup: {'fastq': ['']},
             self.processed_sequence_data: {'fasta': ['*/*/BestAssemblies']}
         }
-        self.old_nas_folders = {
-            self.miseq_backup: {'fastq': ['*']},
-            self.external_miseq_backup: {'fastq': ['*/*',
-                                                   '*/*/*']},
-            self.wgs_spades: {'fasta': ['*/BestAssemblies']},
-            self.merge_wgs_spades: {'fasta': ['*/BestAssemblies']},
-            self.external_wgs_spades: {'fasta': ['*/*/BestAssemblies']},
-            self.external_wgs_spades_nonfood: {'fasta': ['*/*/BestAssemblies']}
-        }
         # List of all the folders
-        self.folders = [folder for folder in self.nas_folders] + [folder for folder in self.old_nas_folders]
+        self.folders = [folder for folder in self.nas_folders]
         # Glob patterns for each file type
         self.extensions = {
             'fastq': '*.fastq.gz',
