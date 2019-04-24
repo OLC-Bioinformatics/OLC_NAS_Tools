@@ -37,19 +37,9 @@ class Retrieve(object):
         logging.debug('File format: {format}'.format(format=self.filetype))
 
         logging.info('Retrieving requested files')
-        # Only look in the old NAS if one or more of the SEQ IDs could not be found in the primary NAS
-        old_nas = False
-        # Look in the new NAS first
+        # Search the NAS!
         self.search_nas(nas=self.nas_folders,
                         file_dict=self.new_file_dict)
-        # Check to see if sequence files for the current SEQ ID were found on the primary NAS
-        for sequence_id in self.seqids:
-            # If the file isn't on the new NAS, check the old NAS
-            if sequence_id not in self.new_file_dict:
-                old_nas = True
-        if old_nas:
-            self.search_nas(nas=self.old_nas_folders,
-                            file_dict=self.old_file_dict)
 
     def search_nas(self, nas, file_dict):
         """
