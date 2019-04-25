@@ -40,3 +40,16 @@ def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=Fa
     :param verbose_flag: BOOL flag to determine logging level. Default False.
     """
 ```
+
+### Local OLC Testing
+
+To make sure that nothing has broken on this before pushing new versions:
+
+Test FASTA retrieve: should end up with 3 fasta files in `fastas` folder, and a warning message
+that 2019-FAKE-2222 couldn't be found.
+
+`nastools.py -f seqids.txt -o fastas -t fasta`
+
+Test FASTQ retrieve: 
+
+`nastools.py -f seqids.txt -o fastqs -t fastq`
