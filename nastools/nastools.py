@@ -27,7 +27,7 @@ class Retrieve(object):
 
     def locate_files(self):
         """
-        Use iglob and supplied search patterns to search the new NAS (and old one, too if necessary). Populates
+        Use iglob and supplied search patterns to search the new NAS. Populates
         dictionaries with seqid: list of paths
         """
         # Debug level logging
@@ -44,7 +44,7 @@ class Retrieve(object):
     def search_nas(self, nas, file_dict):
         """
         Search for the supplied SEQ ID in the desired NAS (location)
-        :param nas: the NAS to search (new vs old)
+        :param nas: the NAS to search (new vs only)
         :param file_dict: dictionary to populate for desired NAS
         """
         for directory, nested_dict in nas.items():
@@ -69,7 +69,7 @@ class Retrieve(object):
 
     def file_triage(self):
         """
-        Process SEQ IDs depending on whether they are found on the new or old NAS
+        Process SEQ IDs depending on whether they are found on the new NAS
         """
         for seqid in sorted(self.seqids):
             logging.critical(seqid)
@@ -77,13 +77,6 @@ class Retrieve(object):
             if seqid in self.new_file_dict:
                 self.file_paths(seqid=seqid,
                                 file_dict=self.new_file_dict)
-            # Otherwise try the old NAS
-            else:
-                if seqid in self.old_file_dict:
-                    self.file_paths(seqid=seqid,
-                                    file_dict=self.old_file_dict)
-                else:
-                    self.missing.append(seqid)
 
     def file_paths(self, seqid, file_dict):
         """
@@ -179,7 +172,6 @@ class Retrieve(object):
         self.verb = 'Copying' if copyflag else 'Linking'
         # Dictionary to store sequence files on the related NAS
         self.new_file_dict = dict()
-        self.old_file_dict = dict()
         # A list to store SEQ IDs for which sequence files cannot be located
         self.missing = list()
 
@@ -219,8 +211,7 @@ def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=Fa
 def nastools_cli():
     # Parser setup
     parser = argparse.ArgumentParser(description='Locate and copy/link either FASTQ or FASTA files on '
-                                                 'the primary OLC NAS (the old NAS is searched if files cannot be '
-                                                 'located on the primary.')
+                                                 'the primary OLC NAS.')
     parser.add_argument("--file", "-f",
                         required=True,
                         type=str,
