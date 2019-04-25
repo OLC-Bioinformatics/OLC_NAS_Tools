@@ -69,7 +69,7 @@ class Retrieve(object):
 
     def file_triage(self):
         """
-        Process SEQ IDs depending on whether they are found on the new NAS
+        Process SEQ IDs depending on if they are found on the new NAS
         """
         for seqid in sorted(self.seqids):
             logging.critical(seqid)
@@ -77,6 +77,8 @@ class Retrieve(object):
             if seqid in self.new_file_dict:
                 self.file_paths(seqid=seqid,
                                 file_dict=self.new_file_dict)
+            else:
+                self.missing.append(seqid)
 
     def file_paths(self, seqid, file_dict):
         """
@@ -186,7 +188,9 @@ def parse_seqid_file(seqfile):
     with open(seqfile) as f:
         for line in f:
             line = line.rstrip()
-            seqids.append(line)
+            # Ignore empty lines
+            if line:
+                seqids.append(line)
     return seqids
 
 
@@ -227,14 +231,10 @@ def nastools_cli():
                         choices=['fasta', 'fastq'],
                         help="Format of files to retrieve. Options are either fasta or fastq")
     parser.add_argument("--copy", "-c",
-                        required=False,
                         action='store_true',
-                        default=False,
                         help="Setting this flag will copy the files instead of creating relative symlinks")
     parser.add_argument("--verbose", "-v",
-                        required=False,
                         action='store_true',
-                        default=False,
                         help="Setting this flag will enable debugging messages")
     args = parser.parse_args()
 
@@ -256,7 +256,7 @@ def nastools_cli():
                         verboseflag=verboseflag)
     # Run script
     retrieve.main()
-    logging.info('{} complete'.format(os.path.basename(__file__)))
+    logging.info('{script} complete'.format(script=os.path.basename(__file__)))
 
 
 if __name__ == '__main__':

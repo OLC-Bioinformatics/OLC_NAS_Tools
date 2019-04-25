@@ -45,11 +45,22 @@ def retrieve_nas_files(seqids, outdir, filetype, copyflag=False, verbose_flag=Fa
 
 To make sure that nothing has broken on this before pushing new versions:
 
-Test FASTA retrieve: should end up with 3 fasta files in `fastas` folder, and a warning message
-that 2019-FAKE-2222 couldn't be found.
+Test FASTA retrieve:
 
 `nastools.py -f seqids.txt -o fastas -t fasta`
+
+There should be four FASTA files in `fastas` folder, and the following warning messages:
+    
+    Located multiple copies of 2018-MER-0103 at the following locations: /mnt/nas2/processed_sequence_data/merged_assemblies/merged_38/BestAssemblies, /mnt/nas2/processed_sequence_data/merged_assemblies/merged_14285_Assembled/BestAssemblies.
+    Please ensure that only a single copy is present on the NAS
+    
+    Files for the following SEQ IDs could not be located: 2019-FAKE-2222
+
 
 Test FASTQ retrieve: 
 
 `nastools.py -f seqids.txt -o fastqs -t fastq`
+
+There should be eight FASTQ files in `fastqs` folder, and the following warning message:
+
+    Files for the following SEQ IDs could not be located: 2019-FAKE-2222
