@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-from accessoryFunctions.accessoryFunctions import filer, make_path, relative_symlink, SetupLogging
+try:
+    from accessoryFunctions.accessoryFunctions import filer, make_path, relative_symlink, SetupLogging
+except ImportError:  # Structure of OLCTools package changed at some point. This makes sure things don't break
+    from olctools.accessoryFunctions.accessoryFunctions import filer, make_path, relative_symlink, SetupLogging
 from glob import iglob
 import argparse
 import logging
