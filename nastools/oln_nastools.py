@@ -13,7 +13,8 @@ except ImportError:
 API_ENDPOINT = 'https://olc.cloud.inspection.gc.ca/metadata/olndata/'
 
 
-def retrieve_oln_files(oln_ids, outdir, filetype, copyflag=False, split_oln=False, quality=['Reference'], verboseflag=False):
+def retrieve_oln_files(oln_ids, outdir, filetype, copyflag=False, split_oln=False, quality=['Reference'], verboseflag=False,
+                       max_per_strain=10):
     """
     Uses the API provided by CFIA FoodPort to figure out which SeqIDs are associated with an OLN ID, and then
     grabs files.
@@ -25,6 +26,7 @@ def retrieve_oln_files(oln_ids, outdir, filetype, copyflag=False, split_oln=Fals
     outdir
     :param quality: List with qualities to grab. Only acceptable entries in list are Fail, Pass, and Reference.
     :param verboseflag: If True, outputs will be more verbose.
+    :param max_per_strain: Maximum number of sequence files to retrieve per strain.
     :return:
     """
     if not os.path.isdir(outdir):
@@ -35,8 +37,9 @@ def retrieve_oln_files(oln_ids, outdir, filetype, copyflag=False, split_oln=Fals
         seqid_data = response.json()
         for seqid in seqid_data:
             if seqid_data[seqid] in quality:
-                logging.info('Grabbing SeqID {} (quality {}) for OLN ID {}.'.format(seqid, seqid_data[seqid], oln_id))
-                seqids_to_get.append(seqid)
+                if len(seqids_to_get) < max_per_strain:
+                    logging.info('Grabbing SeqID {} (quality {}) for OLN ID {}.'.format(seqid, seqid_data[seqid], oln_id))
+                    seqids_to_get.append(seqid)
         if split_oln:
             oln_outdir = os.path.join(outdir, oln_id)
             if not os.path.isdir(oln_outdir):
@@ -81,6 +84,10 @@ def nastools_oln_cli():
                         nargs='+',
                         choices=['Fail', 'Pass', 'Reference'],
                         default=['Reference'])
+    parser.add_argument('-m', '--max_per_strain',
+                        type=int,
+                        default=10,
+                        help='Maximum number of sequences to retrieve per strain. Defaults to 10.')
     args = parser.parse_args()
 
     SetupLogging(args.verbose)
@@ -91,7 +98,8 @@ def nastools_oln_cli():
                        quality=args.quality,
                        verboseflag=args.verbose,
                        copyflag=args.copy,
-                       split_oln=args.split_on_oln)
+                       split_oln=args.split_on_oln,
+                       max_per_strain=args.max_per_strain)
 
 
 if __name__ == '__main__':
