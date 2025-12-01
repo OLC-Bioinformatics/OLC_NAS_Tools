@@ -1,0 +1,32 @@
+{% set name = "olcnastools" %}
+{% set version = "{{ version }}" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+build:
+  number: 0
+  noarch: python
+  script: python -m pip install --no-deps --ignore-installed .
+
+source:
+  url: https://github.com/OLC-Bioinformatics/OLC_NAS_Tools/archive/v{{ version }}.tar.gz
+  fn: {{ name }}-{{ version }}.tar.gz
+
+requirements:
+  host:
+    - python >=3.12,<4.0
+  run:
+    - python >=3.12,<4.0
+
+about:
+  home: https://github.com/OLC-Bioinformatics/OLC_NAS_Tools
+  license: MIT
+  license_family: MIT
+  summary: OLC NAS tools
+  description: Utilities to manage files on the OLC NAS
+  doc_url: https://github.com/OLC-Bioinformatics/OLC_NAS_Tools
+
+extra:
+  recipe-maintainers: 'adamkoziol'
