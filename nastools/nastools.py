@@ -485,7 +485,17 @@ def nastools_cli():
     return retrieve
 
 
-if __name__ == '__main__':
+def main():
+    """Command-line entry point for the nastools package.
+
+    This function builds the parser, parses arguments, constructs the
+    retrieval object and runs the retrieval. It is suitable to be used
+    as a console entry point (console_scripts or project.scripts).
+    """
     nastools = nastools_cli()
     nastools.main()
     logging.info('{script} complete'.format(script=os.path.basename(__file__)))
+
+
+if __name__ == '__main__':
+    main()
