@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="olcnastools",
-    version="1.2.2",
+    version="1.2.3",
     packages=find_packages(),
     author="Adam Koziol, Andrew Low, Forest Dussault",
     author_email="adam.koziol@inspection.gc.ca",

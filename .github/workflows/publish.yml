@@ -18,7 +18,7 @@ jobs:
         activate-environment: olcnastools_env
         python-version: 3.13
         auto-activate-base: false
-        channels: olcbioinformatics,bioconda,conda-forge
+        channels: conda-forge
     - name: Install Conda build
       run: conda install -y conda-build
     # Note: conda-verify is not installed here because many builds
