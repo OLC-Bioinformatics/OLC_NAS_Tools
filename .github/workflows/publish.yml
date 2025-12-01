@@ -51,6 +51,9 @@ jobs:
         conda install -y anaconda-client
         echo "$(conda info --base)/bin" >> $GITHUB_PATH
     - name: Upload package to olcbioinformatics
-      if: ${{ secrets.OLCBIOINFORMATICS_ANACONDA_API_TOKEN != '' }}
       run: |
-        anaconda -t ${{ secrets.OLCBIOINFORMATICS_ANACONDA_API_TOKEN }} upload -u olcbioinformatics $CONDA_PKG_PATH/olcnastools-*.conda
+        if [ -n "${{ secrets.OLCBIOINFORMATICS_ANACONDA_API_TOKEN }}" ]; then
+          anaconda -t ${{ secrets.OLCBIOINFORMATICS_ANACONDA_API_TOKEN }} upload -u olcbioinformatics $CONDA_PKG_PATH/olcnastools-*.conda
+        else
+          echo "OLCBIOINFORMATICS_ANACONDA_API_TOKEN secret not set; skipping upload to olcbioinformatics."
+        fi
