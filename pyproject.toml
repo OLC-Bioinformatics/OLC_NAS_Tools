@@ -13,9 +13,9 @@ authors = [
 urls = { "homepage" = "https://github.com/OLC-Bioinformatics/OLC_NAS_Tools" }
 requires-python = ">=3.8"
 
-[tool.setuptools]
-# Preserve the legacy `scripts` that were defined in setup.py
-scripts = ["nastools/nastools.py"]
+[project.scripts]
+nastools = "nastools.nastools:main"
 
+[tool.setuptools]
 [tool.setuptools.packages.find]
 where = ["."]
