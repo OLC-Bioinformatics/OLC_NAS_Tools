@@ -2,3 +2,12 @@
 .idea/
 venv/
 seqids.txt
+build/
+*.egg-info/
+*.egg
+.eggs/
+*.conda
+*.tar.bz2
+__pycache__/
+*.pyc
+conda-bld/

@@ -1,9 +1,8 @@
 # OLC NAS Tools
-[![PyPI version](https://badge.fury.io/py/olcnastools.svg)](https://badge.fury.io/py/olcnastools)
 
 ## Install
 ```
-pip install olcnastools
+conda install olcnastools
 ```
 
 ## Usage
