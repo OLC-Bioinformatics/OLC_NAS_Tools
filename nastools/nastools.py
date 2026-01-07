@@ -14,15 +14,18 @@ Usage:
 """
 
 # Standard library imports
-import argparse
 from glob import iglob
+from importlib import metadata
+import argparse
 import logging
 import os
 import re
 import shutil
 
+__version__ = metadata.version('olcnastools')
 
-class Retrieve(object):
+
+class Retrieve:
     """
     Class to retrieve FASTQ or FASTA files from the primary OLC NAS based on a
     list of SEQ IDs.
@@ -44,8 +47,8 @@ class Retrieve(object):
         for folder in self.folders:
             if not os.path.isdir(folder):
                 logging.error(
-                    'Could not find %s. Ensure the NAS is properly mounted.'
-                    % folder
+                    'Could not find %s. Ensure the NAS is properly mounted.',
+                    folder
                 )
                 raise SystemExit(1)
 
@@ -55,10 +58,10 @@ class Retrieve(object):
         dictionaries with seqid: list of paths
         """
         # Debug level logging
-        logging.debug('Seq IDs provided: %s' % ', '.join(sorted(self.seqids)))
-        logging.debug('Output directory: %s' % self.outdir)
-        logging.debug('Copy flag: %s' % self.copyflag)
-        logging.debug('File format: %s' % self.filetype)
+        logging.debug('Seq IDs provided: %s', ', '.join(sorted(self.seqids)))
+        logging.debug('Output directory: %s', self.outdir)
+        logging.debug('Copy flag: %s', self.copyflag)
+        logging.debug('File format: %s', self.filetype)
 
         logging.info('Retrieving requested files')
 
@@ -139,12 +142,9 @@ class Retrieve(object):
         paths = file_dict[seqid]
         if len(paths) > self.lengths:
             logging.error(
-                'Located multiple copies of %s at the following locations: %s.'
-                % (
-                    seqid,
-                    ', '.join(set(os.path.dirname(path) for path in paths))
+                'Located multiple copies of %s at the following locations: %s',
+                seqid, ', '.join(set(os.path.dirname(path) for path in paths))
                 )
-            )
             logging.error(
                 'Please ensure that only a single copy is present on the NAS'
             )
@@ -165,7 +165,7 @@ class Retrieve(object):
 
         # Set the name and path of the file to output
         output_file = os.path.join(self.outdir, filename)
-        logging.info('%s %s to %s' % (self.verb, path, output_file))
+        logging.info('%s %s to %s', self.verb, path, output_file)
 
         # Don't try to add the file if it is already present in the folder
         if not os.path.isfile(output_file):
@@ -226,15 +226,11 @@ class Retrieve(object):
         self.raw_sequence_data = os.path.join(
             self.nas_dir, 'raw_sequence_data'
         )
-        self.merge_backup = os.path.join(
-            self.nas_dir, 'raw_sequence_data', 'merged_sequences'
-        )
 
         # Dictionaries storing the path, the file type present in the folded
         # and the nested folder structure
         self.nas_folders = {
             self.raw_sequence_data: {'fastq': ['*/*']},
-            self.merge_backup: {'fastq': ['']},
             self.processed_sequence_data: {'fasta': ['*/*/BestAssemblies']}
         }
 
@@ -318,9 +314,9 @@ def filer(
         re.compile(r"_S\d+_L001"),
         re.compile(r"_S\d+_R\d_\d{3}"),
         re.compile(r"_R\d_001"),
-        re.compile(r"R\d\.{}".format(extension)),
-        re.compile(r"[-_]\d\.{}".format(extension)),
-        re.compile(r"\.{}".format(extension))
+        re.compile(fr"R\d\.{extension}"),
+        re.compile(fr"[-_]\d\.{extension}"),
+        re.compile(fr"\.{extension}")
     ]
 
     for seqfile in filelist:
@@ -424,10 +420,19 @@ def retrieve_nas_files(
 
 
 def nastools_cli():
+    """
+    Command-line interface for the nastools package.
+    """
     # Parser setup
     parser = argparse.ArgumentParser(
         description='Locate and copy/link either FASTQ or FASTA files on '
         'the primary OLC NAS.'
+    )
+    parser.add_argument(
+        "--version",
+        action='version',
+        version=f'%(prog)s {__version__}',
+        help="Print the version number and exit"
     )
     parser.add_argument(
         "--file", "-f",
@@ -486,7 +491,8 @@ def nastools_cli():
 
 
 def main():
-    """Command-line entry point for the nastools package.
+    """
+    Command-line entry point for the nastools package.
 
     This function builds the parser, parses arguments, constructs the
     retrieval object and runs the retrieval. It is suitable to be used
@@ -494,7 +500,7 @@ def main():
     """
     nastools = nastools_cli()
     nastools.main()
-    logging.info('{script} complete'.format(script=os.path.basename(__file__)))
+    logging.info('%s complete', os.path.basename(__file__))
 
 
 if __name__ == '__main__':
