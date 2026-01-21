@@ -107,7 +107,7 @@ class Retrieve:
                         try:
                             file_dict[sequence_id].append(path)
                         except KeyError:
-                            file_dict[sequence_id] = list()
+                            file_dict[sequence_id] = []
                             file_dict[sequence_id].append(path)
             except KeyError:
                 pass
@@ -309,37 +309,48 @@ def filer(
     fileset = set()
     filedict = {}
 
-    # Compile regex patterns for performance
-    patterns = [
-        re.compile(r"_S\d+_L001"),
-        re.compile(r"_S\d+_R\d_\d{3}"),
-        re.compile(r"_R\d_001"),
-        re.compile(fr"R\d\.{extension}"),
-        re.compile(fr"[-_]\d\.{extension}"),
-        re.compile(fr"\.{extension}")
+    # Build an extension regex that accepts optional .gz
+    ext_re = fr"(?:\.{re.escape(extension)}(?:\.gz)?)$"
+
+    # Stripping patterns ordered from most specific to least specific
+    strip_patterns = [
+        re.compile(
+            r"_S\d+_L\d+(_R\d(_\d+)?)?", re.IGNORECASE
+        ),  # _S24_L001_R1_001
+        re.compile(
+            r"_R\d_\d{3}", re.IGNORECASE
+        ),  # _R1_001
+        re.compile(
+            r"_R\d_001", re.IGNORECASE
+        ),  # _R1_001 (explicit)
+        re.compile(
+            r"_R\d", re.IGNORECASE
+        ),  # _R1 / _R2
+        re.compile(
+            r"[-_]\d{1,3}(_\d{3})?$", re.IGNORECASE
+        ),  # _001 or -1 etc
+        re.compile(
+            ext_re, re.IGNORECASE
+        ),  # .fastq(.gz) or .fasta
     ]
 
     for seqfile in filelist:
-        file_name = seqfile
-        for pattern in patterns:
-            # If the pattern is found, split the string and take the first part
-            if pattern.search(seqfile):
-                file_name = pattern.split(seqfile)[0]
+        filename_only = os.path.basename(seqfile)
+        file_name = filename_only
+        for pat in strip_patterns:
+            m = pat.search(file_name)
+            if m:
+                file_name = file_name[:m.start()]
                 break
 
-        # Add the calculated file name to the set
-        fileset.add(file_name)
-        # Populate the dictionary with the file name: seq file pair
-        try:
-            filedict[file_name].append(seqfile)
-        except KeyError:
-            filedict[file_name] = [seqfile]
+        file_name = file_name.rstrip('_-')  # final cleanup
 
-    # Return the appropriate variable
-    if not returndict:
-        return fileset
-    else:
+        fileset.add(file_name)
+        filedict.setdefault(file_name, []).append(seqfile)
+
+    if returndict:
         return filedict
+    return fileset
 
 
 def relative_symlink(
