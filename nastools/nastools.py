@@ -236,6 +236,7 @@ class Retrieve:
 
         # List of all the folders
         self.folders = [folder for folder in self.nas_folders]
+
         # Glob patterns for each file type
         self.extensions = {
             'fastq': '*.fastq.gz',
@@ -317,6 +318,9 @@ def filer(
         re.compile(
             r"_S\d+_L\d+(_R\d(_\d+)?)?", re.IGNORECASE
         ),  # _S24_L001_R1_001
+        re.compile(
+            r"_S\d+(_R\d(_\d+)?)?", re.IGNORECASE
+        ),  # _S24_R1_001 (nextseq)
         re.compile(
             r"_R\d_\d{3}", re.IGNORECASE
         ),  # _R1_001

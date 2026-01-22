@@ -4,4 +4,4 @@
 Version information for the nastools package.
 """
 
-__version__ = "1.2.9"
+__version__ = "1.3.0"
